@@ -11,11 +11,11 @@ public class Main {
         System.out.print("Masukkan file path: ");
         String filename = scanner.nextLine();
         String filepath = "test/input/" + filename;
-        
+
         try {
             List<String> inputList = Files.readAllLines(Paths.get(filepath));
             for (String line : inputList) {
-                System.out.print(line);
+                System.out.println(line);
             }
         }
         catch (IOException e) {
