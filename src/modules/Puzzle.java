@@ -70,4 +70,10 @@ public class Puzzle {
         }
         System.out.println();
     }
+
+    // 4. Make default board/matrix
+    public static char[][] createDefaultBoard(int N, int M) {
+        char[][] board = new char[N][M];
+        return board;
+    }
 }
