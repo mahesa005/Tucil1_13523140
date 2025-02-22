@@ -5,6 +5,15 @@ import java.util.List;
 import java.util.Scanner;
 import modules.*;
 
+/* To do
+ * 1. Extract pieces
+ * 2. isPlacable
+ * 3. Placing piece on board
+ * 4. Deleting piece from board
+ * 5. Algorithmmmmmmmm
+ */
+
+
 public class Main {
     public static void main(String[] args) {
         preprocess(args);
@@ -25,6 +34,22 @@ public class Main {
             System.out.println(getRow(inputList.get(0)));
             System.out.println(getCol(inputList.get(0)));
             System.out.println(getTotalPieces(inputList.get(0)));
+
+            int rows = getRow(inputList.get(0));
+            int cols = getCol(inputList.get(0));
+            int totalPuzzlePieces = getTotalPieces(inputList.get(0));
+
+            char[][] board = getBoardConfig(inputList.get(1), rows, cols);
+            modules.Puzzle.fillBoardWithRandomChars(board);
+            modules.Puzzle.printBoard(board);
+            board = modules.Puzzle.mirror(board);
+            System.out.println(" ");
+            modules.Puzzle.printBoard(board);
+            System.out.println(" ");
+            board = modules.Puzzle.rotate90(board);
+            modules.Puzzle.printBoard(board);
+
+
         }
         catch (IOException e) {
             System.out.println("Terjadi kesalahan: " + e.getMessage());
@@ -65,14 +90,17 @@ public class Main {
     }
 
     // get config
-    /*public static char[][] getBoardConfig(String config, int row, int col) {
-        char [][] board;
+    public static char[][] getBoardConfig(String config, int row, int col) {
         if (config.equals("DEFAULT")) {
-            board = modules.Puzzle.createDefaultBoard(row, col);
+            return modules.Puzzle.createCharMatrix(row, col);
+        } else {
+            System.out.println("Error loading config: " + config);
+            return new char[row][col]; 
         }
-        else {
-            
-        }
-        return board;
-    } */
+    }
+
+    // string to arr of char
+    public static char[] strToChar(String str) {
+        return str.toCharArray();
+    }
 }
