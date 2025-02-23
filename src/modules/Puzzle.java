@@ -1,7 +1,10 @@
 package modules;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Puzzle {
     // Driver
@@ -216,16 +219,15 @@ public class Puzzle {
 
     // 10. Check if puzzle piece is placable on the board
     public static boolean isPlacable(char[][] board, int currRow, int currCol, char[][] puzzlePiece) {
-        int rowSpace = board.length - currRow;
-        int colSpace = board[0].length - currCol;
-
-        if (puzzlePiece.length > rowSpace || puzzlePiece[0].length > colSpace) {
+        if ((currRow + puzzlePiece.length) > board.length) {
             return false;
         }
 
         for (int i = 0; i < puzzlePiece.length; i++) {
-            for (int j = 0; j < puzzlePiece[0].length; j++) {
-                if (board[currRow + i][currCol + j] != '\u0000') {
+            if ((currCol + puzzlePiece[i].length > board[0].length)) return false;
+
+            for (int j = 0; j < puzzlePiece[i].length; j++) {
+                if (board[currRow + i][currCol + j] != '.' && puzzlePiece[i][j] != '.') {
                     return false;
                 }
             }
@@ -237,7 +239,7 @@ public class Puzzle {
     public static char[][] placePiece(char[][] board, int currRow, int currCol, char[][] puzzlePiece) { // make sure udh di check placable dulu
         for (int i = 0; i < puzzlePiece.length; i++) {
             for (int j = 0; j < puzzlePiece[0].length; j++) {
-                if (puzzlePiece[i][j] != '\u0000') {
+                if (puzzlePiece[i][j] != '.') {
                     board[currRow + i][currCol + j] = puzzlePiece[i][j];
                 }
             }
@@ -245,5 +247,73 @@ public class Puzzle {
         return board;
     }
 
-    // 12. Check if puzzle is not full
+    // 12. Get all puzzle variations
+    public static List<char[][]> getAllPieceVariations(char[][] puzzlePiece) {
+        List<char[][]> pieceVariations = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            pieceVariations.add(puzzlePiece);
+            puzzlePiece = rotate90(puzzlePiece);
+        }
+        puzzlePiece = mirror(puzzlePiece);
+        for (int i = 0; i < 4; i++) {
+            pieceVariations.add(puzzlePiece);
+            puzzlePiece = rotate90(puzzlePiece);
+        }
+        pieceVariations = removeDuplicateMatrices(pieceVariations);
+        return pieceVariations;
+    }
+
+    // 13. fill puzzle board with '.'
+    public static char[][] fillBoardWithDot(char[][] emptyBoard) {
+        int row = emptyBoard.length;
+        int col = emptyBoard[0].length;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                emptyBoard[i][j] = '.';
+            }
+        }
+        return emptyBoard;
+    }
+
+    // 14. Check is board filled
+    public static boolean isBoardFilled(char[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == '.') return false;
+            }
+        }
+        return true;
+    }
+
+    // 15. isPuzzlePieceSame
+    public static boolean isSamePuzzlePiece(char[][] piece1, char[][] piece2) {
+        if ((piece1.length != piece2.length) || (piece1[0].length != piece2[0].length)) return false; // check dimensions
+        for (int i = 0; i < piece1.length; i++) {
+            for (int j = 0; j < piece1[0].length; j++) {
+                if (piece1[i][j] != piece2[i][j]) return false;
+            }
+        }
+        return true;
+    }
+
+    // 16. Remove Duplicates from matrix list
+    public static List<char[][]> removeDuplicateMatrices(List<char[][]> matrixList) {
+        List<char[][]> uniqueMatrices = new ArrayList<>();
+    
+        for (char[][] matrix : matrixList) {
+            boolean isDuplicate = false;
+    
+            for (char[][] uniqueMatrix : uniqueMatrices) {
+                if (isSamePuzzlePiece(matrix, uniqueMatrix)) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+    
+            if (!isDuplicate) {
+                uniqueMatrices.add(matrix);
+            }
+        }
+        return uniqueMatrices;
+    }
 }

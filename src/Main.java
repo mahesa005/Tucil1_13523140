@@ -9,7 +9,7 @@ import java.util.Scanner;
  * 1. Extract pieces DONE
  * 2. isPlacable DONE
  * 3. Placing piece on board DONE
- * 4. Deleting piece from board 
+ * 4. Deleting piece from board GAUSA
  * 5. Algorithmmmmmmmm
  */
 
@@ -104,7 +104,8 @@ public class Main {
     // get config
     public static char[][] getBoardConfig(String config, int row, int col) {
         if (config.equals("DEFAULT")) {
-            return modules.Puzzle.createCharMatrix(row, col);
+            char[][] board = modules.Puzzle.createCharMatrix(row, col);
+            return modules.Puzzle.fillBoardWithDot(board);
         } else {
             System.out.println("Error loading config: " + config);
             return new char[row][col]; 
@@ -116,52 +117,77 @@ public class Main {
         return str.toCharArray();
     }
 
+    // get first nonSpaceCharacter
+    public static char getFirstNonSpaceCharacter(char[] line) {
+        for (char c : line) {
+            if (c != ' ') {
+                return c;
+            }
+        }
+        return ' ';
+    }
+
     // extract puzzle pieces
     public static List<char[][]> getPuzzlePieces(List<String> inputList, int totalPuzzlePieces) {
         List<char[][]> puzzlePieces = new ArrayList<>();
         int strIdx = 2;
-
+    
         while (strIdx < inputList.size()) {
-
+    
             char[] currString = strToChar(inputList.get(strIdx));
-            char currChar = currString[0];
+            char currChar = getFirstNonSpaceCharacter(currString);
             char currBlock = currChar;
-            int maxCol = currString.length;
-
+            int maxCol = 0;
+    
+            int tempIdx = strIdx;
+            while (tempIdx < inputList.size() && getFirstNonSpaceCharacter(strToChar(inputList.get(tempIdx))) == currBlock) {
+                maxCol = Math.max(maxCol, inputList.get(tempIdx).length());
+                tempIdx++;
+            }
+    
             char[][] currPuzzlePiece = modules.Puzzle.createCharMatrix(1, maxCol);
-
             int currRow = 0;
-
-            while (strIdx < inputList.size() && currChar == currBlock) {
+    
+            while (strIdx < inputList.size() && getFirstNonSpaceCharacter(strToChar(inputList.get(strIdx))) == currBlock) { 
                 if (currRow > 0) {
-                    currPuzzlePiece = modules.Puzzle.addRows(currPuzzlePiece, currRow - (currRow - 1));
+                    currPuzzlePiece = modules.Puzzle.addRows(currPuzzlePiece, 1);
                 }
+    
                 currString = strToChar(inputList.get(strIdx));
-
+    
                 if (currString.length > maxCol) {
                     currPuzzlePiece = modules.Puzzle.addCols(currPuzzlePiece, currString.length);
                     maxCol = currString.length;
                 }
 
-                for (int currCol = 0; currCol < currString.length; currCol++) {
-                    currPuzzlePiece = modules.Puzzle.insCharToMatrix(currPuzzlePiece, currRow, currCol, currString[currCol]);
+                for (int currCol = 0; currCol < maxCol; currCol++) {
+                    char ch = (currCol < currString.length) ? currString[currCol] : '.'; 
+                    if (ch == ' ') ch = '.';
+                    currPuzzlePiece = modules.Puzzle.insCharToMatrix(currPuzzlePiece, currRow, currCol, ch);
                 }
-
+    
                 currRow++;
                 strIdx++;
-
+    
                 if (strIdx < inputList.size()) {
                     currString = strToChar(inputList.get(strIdx));
-                    currChar = currString[0];
+                    currChar = getFirstNonSpaceCharacter(currString);
                 }
             }
-
+    
             puzzlePieces.add(currPuzzlePiece);
-
+    
             if (strIdx < inputList.size()) {
-                currBlock = inputList.get(strIdx).charAt(0);
+                currBlock = getFirstNonSpaceCharacter(strToChar(inputList.get(strIdx)));
             }
         }
         return puzzlePieces;
-        }
     }
+
+    // IQ Puzzle Solver YESYESYES
+    public static boolean IQPuzzleSolver(int puzzlePieceIdx) {
+        
+    }
+}
+
+    
