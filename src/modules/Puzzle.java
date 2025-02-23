@@ -185,8 +185,7 @@ public class Puzzle {
         if (matrix.length == 0) { // handle case matrix.length = 0
             return new char[addedRows][0];
         }
-
-        char[][] newMatrix = new char[matrix.length + addedRows][matrix[0].length];
+        char[][] newMatrix = new char[addedRows + matrix.length][matrix[0].length];
         copyMatrix(matrix, newMatrix); // save the value of the old matrix
         return newMatrix; // new matrix with added rows
     }
@@ -214,4 +213,37 @@ public class Puzzle {
             }
         }
     }
+
+    // 10. Check if puzzle piece is placable on the board
+    public static boolean isPlacable(char[][] board, int currRow, int currCol, char[][] puzzlePiece) {
+        int rowSpace = board.length - currRow;
+        int colSpace = board[0].length - currCol;
+
+        if (puzzlePiece.length > rowSpace || puzzlePiece[0].length > colSpace) {
+            return false;
+        }
+
+        for (int i = 0; i < puzzlePiece.length; i++) {
+            for (int j = 0; j < puzzlePiece[0].length; j++) {
+                if (board[currRow + i][currCol + j] != '\u0000') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // 11. Place puzzle piece on board
+    public static char[][] placePiece(char[][] board, int currRow, int currCol, char[][] puzzlePiece) { // make sure udh di check placable dulu
+        for (int i = 0; i < puzzlePiece.length; i++) {
+            for (int j = 0; j < puzzlePiece[0].length; j++) {
+                if (puzzlePiece[i][j] != '\u0000') {
+                    board[currRow + i][currCol + j] = puzzlePiece[i][j];
+                }
+            }
+        }
+        return board;
+    }
+
+    // 12. Check if puzzle is not full
 }
