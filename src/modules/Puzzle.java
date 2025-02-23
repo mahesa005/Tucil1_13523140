@@ -316,4 +316,15 @@ public class Puzzle {
         }
         return uniqueMatrices;
     }
+
+    // 17. Remove piece from board
+    public static void removePiece(char[][] board, char[][] puzzlePiece, int row, int col) {
+        for (int i = 0; i < puzzlePiece.length; i++) {
+            for (int j = 0 ; j < puzzlePiece[0].length; j++) {
+                if (puzzlePiece[i][j] != '.') {
+                    board[i + row][j + col] = '.';
+                }
+            }
+        }
+    }
 }
