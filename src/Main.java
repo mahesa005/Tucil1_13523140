@@ -28,7 +28,7 @@ public class Main {
     public static void main(String[] args) {
         preProcess(args);
         long startTime = System.currentTimeMillis();
-        if (!IQPuzzleSolver(0)) {
+        if (!IQPuzzlerPro(0)) {
             System.out.println("Gagal mendapatkan solusi");
             return;
         }
@@ -175,7 +175,7 @@ public class Main {
     }
 
     // IQ Puzzle Solver YESYESYES
-    public static boolean IQPuzzleSolver(int puzzlePieceIdx) {
+    public static boolean IQPuzzlerPro(int puzzlePieceIdx) {
         if (puzzlePieceIdx == puzzlePieces.size()) return modules.Puzzle.isBoardFilled(board);
         char[][] puzzlePiece = puzzlePieces.get(puzzlePieceIdx);
         List<char[][]> pieceVariants = modules.Puzzle.getAllPieceVariations(puzzlePiece);
@@ -184,7 +184,7 @@ public class Main {
                 for (int j = 0; j < cols; j++) {
                     if (modules.Puzzle.isPlacable(board, i, j, uniquePiece)) {
                         modules.Puzzle.placePiece(board, i, j, uniquePiece);
-                        if (IQPuzzleSolver(puzzlePieceIdx + 1)) return true;
+                        if (IQPuzzlerPro(puzzlePieceIdx + 1)) return true;
                         modules.Puzzle.removePiece(board, uniquePiece, i, j);
                         caseCtr++;
                     }
